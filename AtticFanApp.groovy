@@ -79,13 +79,15 @@ def updated() {
 
 def initialize() {
 	subscribe(contactSensors, "contact", contactHandler)
+	subscribe(doorSensors, "contact", doorHandler)
 	createOrUpdateChildDevice()
-    contactHandler()
+    if (doorSensors) {
+        doorHandler()
+    } else {
+        contactHandler()}
     def device = getChildDevice(state.contactDevice)
     device.sendEvent(name: "TotalCount", value: contactSensors.size())
 	device.sendEvent(name: "OpenThreshold", value: activeThreshold)
-    log.trace "Windows are: ${contactSensors}"
-    log.trace "Doors are: ${doorSensors}"
     runIn(1800,logsOff)
 }
 
@@ -102,6 +104,29 @@ def contactHandler(evt) {
 		log.info "All closed; setting virtual device as closed"
 		logDebug "Current threshold value is ${activeThreshold}"
 		device.sendEvent(name: "contact", value: "closed")
+	}
+}
+
+def doorHandler(evt) {
+	def device = getChildDevice(state.contactDevice)
+    def closedCount = 0
+	doorSensors.each { it ->
+		if (it.currentValue("contact") == "closed") {
+			closedCount++
+		}
+	}
+	if (closedCount >= 1) {
+		log.info "Door(s) closed; ignoring windows."
+		unsubscribe(contactSensors, "contact", contactHandler)
+		device.sendEvent(name: "TotalClosed", value: contactSensors.size())
+    	device.sendEvent(name: "TotalOpen", value: "0")
+		device.sendEvent(name: "OpenList", value: "[None]")
+        device.sendEvent(name: "contact", value: "closed")
+	} else {
+		log.info "Door(s) open; checking windows..."
+		subscribe(contactSensors, "contact", contactHandler)
+		getCurrentCount()
+        contactHandler()
 	}
 }
 
@@ -128,7 +153,6 @@ def logsOff(){
 }
 
 def getCurrentCount() {
-	getClosedDoors()
 	def device = getChildDevice(state.contactDevice)
 	def totalOpen = 0
     def totalClosed = 0
@@ -159,15 +183,4 @@ def getCurrentCount() {
     device.sendEvent(name: "TotalClosed", value: totalClosed)
     device.sendEvent(name: "TotalOpen", value: totalOpen)
 	device.sendEvent(name: "OpenList", value: state.openList)
-}
-
-def getClosedDoors() {
-	def closedRoomsList = []
-	doorSensors.each { it ->
-	if (it.currentValue("contact") == "closed") {
-		closedRoomsList.add(it.roomName)
-	}
-	}
-	state.closedRooms = closedRoomsList
-	log.trace "Closed rooms are ${state.closedRooms}"
 }
