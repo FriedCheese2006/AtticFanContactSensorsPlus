@@ -1,0 +1,27 @@
+{
+  "packageName": "Attic Fan Contact Sensors+",
+  "author": "Ryan Elliott",
+  "version": "0.0.1",
+  "minimumHEVersion": "0.0",
+  "dateReleased": "2022-09-22",
+  "apps": [
+    {
+      "id": "8b89c2f0-51ec-4b0b-aea6-88e8b5318f93",
+      "name": "Attic Fan Sensor Groups+_Contact",
+      "namespace": "rle.sg+",
+      "location": "https://raw.githubusercontent.com/FriedCheese2006/AtticFanContactSensorsPlus/main/AtticFanApp.groovy",
+      "required": true,
+      "oauth": false,
+      "primary": true
+    }
+  ],
+  "drivers": [
+    {
+      "id": "7dc7a628-24dc-43bf-a5f5-93af21b80ea3",
+      "name": "Sensor Groups+_Virtual Contact Sensor",
+      "namespace": "rle.sg+",
+      "location": "https://raw.githubusercontent.com/FriedCheese2006/AtticFanContactSensorsPlus/main/AtticFanDevice.groovy",
+      "required": true
+    }
+  ]
+}
