@@ -161,3 +161,14 @@ def getCurrentCount() {
     device.sendEvent(name: "TotalOpen", value: totalOpen)
 	device.sendEvent(name: "OpenList", value: state.openList)
 }
+
+def getClosedDoors() {
+	def closedRoomsList = []
+	doorSensors.each { it ->
+	if (it.currentValue("contact") == "closed") {
+		closedRoomsList.add(it.roomName)
+	}
+	}
+	state.closedRooms = closedRoomsList
+	log.trace "Closed rooms are ${state.closedRooms}"
+}
