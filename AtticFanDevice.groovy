@@ -24,7 +24,6 @@ metadata {
     author: "Ryan Elliott") 
 		{
 		capability "ContactSensor"
-		capability "Actuator"
 			
 		attribute "contact", "enum", ["closed", "open"]
 		attribute "TotalCount", "number"
