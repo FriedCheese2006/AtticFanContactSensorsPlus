@@ -46,7 +46,9 @@ def prefSettings() {
 		section {
 			paragraph "Please choose which sensors to include in this group. When all the sensors are closed, the virtual device is closed. If any sensor is open, the virtual device is open."
 
-			input "contactSensors", "capability.contactSensor", title: "Contact sensors to monitor", multiple:true, required:true
+			input "contactSensors", "capability.contactSensor", title: "Window contact sensors to monitor", multiple:true, required:true
+
+            input "doorSensors", "capability.contactSensor", title: "Door contact sensors (optional)", multiple:true, required:false
         }
 		section {
             paragraph "Set how many sensors are required to change the status of the virtual device."
@@ -71,9 +73,9 @@ def uninstalled() {
 }
 
 def updated() {	
-    	logDebug "Updated with settings: ${settings}"
+    logDebug "Updated with settings: ${settings}"
 	unschedule()
-    	unsubscribe()
+    unsubscribe()
 	initialize()
 }
 
@@ -83,7 +85,9 @@ def initialize() {
     contactHandler()
     def device = getChildDevice(state.contactDevice)
     device.sendEvent(name: "TotalCount", value: contactSensors.size())
-	device.sendEvent(name: "OpenThreshold", value: activeThreshold) 
+	device.sendEvent(name: "OpenThreshold", value: activeThreshold)
+    log.trace "Windows are: ${contactSensors}"
+    log.trace "Doors are: ${doorSensors}"
     runIn(1800,logsOff)
 }
 
@@ -133,7 +137,7 @@ def getCurrentCount() {
 	contactSensors.each { it ->
 		if (it.currentValue("contact") == "open")
 		{
-			totalOpen++
+            totalOpen++
 			if (it.label) {
             openList.add(it.label)
             }
