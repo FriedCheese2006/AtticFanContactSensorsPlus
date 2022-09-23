@@ -92,7 +92,7 @@ def initialize() {
 }
 
 def contactHandler(evt) {
-    log.info "Contact changed, checking status count..."
+    log.info "Checking status count..."
     getCurrentCount()
     def device = getChildDevice(state.contactDevice)
 	if (state.totalOpen >= activeThreshold)
