@@ -130,6 +130,7 @@ def logsOff(){
 }
 
 def getCurrentCount() {
+	getClosedDoors()
 	def device = getChildDevice(state.contactDevice)
 	def totalOpen = 0
     def totalClosed = 0
