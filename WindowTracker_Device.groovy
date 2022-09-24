@@ -22,7 +22,6 @@ metadata {
     author: "Ryan Elliott") 
 		{
 		capability "ContactSensor"
-		capability "Actuator"
 			
 		attribute "contact", "enum", ["closed", "open"]
 		attribute "TotalCount", "number"
@@ -30,6 +29,9 @@ metadata {
 		attribute "TotalClosed", "number"
 		attribute "OpenList", "string"
 		attribute "OpenThreshold", "number"
+		attribute "AggregateTotalCount", "number"
+		attribute "AggregateTotalOpen", "number"
+		attribute "AggregateTotalClosed", "number"
 	}
 }
 

@@ -1,6 +1,6 @@
 /**
  *
- * Window Tracker Child
+ * Window Tracker Summary
  *
  * Copyright 2022 Ryan Elliott
  * 
@@ -16,7 +16,7 @@
  */
  
 definition(
-    name: "Window Tracker Child",
+    name: "Window Tracker Summary",
     namespace: "rle.sg+",
     author: "Ryan Elliott",
     description: "Creates virtual devices to track groups of contact sensors.",
@@ -44,7 +44,7 @@ def prefSettings() {
 			paragraph "Please choose which sensors to include in this group. The virtual device will provide the sum of total devices, total open, and total closed."+
             "<br>The selected sensors should only be the child devices created by the Window Tracker Child app instances."
 
-			input "contactSensors", "capability.aggregate", title: "Select the sensors you would like to aggregate.", multiple:true, required:true
+			input "contactSensors", "capability.contactSensor", title: "Select the sensors you would like to aggregate.", multiple:true, required:true
 
             input "debugOutput", "bool", title: "Enable debug logging?", defaultValue: true, displayDuringSetup: false, required: false
         }
@@ -71,33 +71,16 @@ def updated() {
 }
 
 def initialize() {
-	subscribe(contactSensors, "contact", contactHandler)
-	subscribe(doorSensors, "contact", doorHandler)
+	subscribe(contactSensors, "TotalOpen", aggregateHandler)
 	createOrUpdateChildDevice()
-    if (doorSensors) {
-        doorHandler()
-    } else {
-        contactHandler()}
+	aggregateHandler()
     def device = getChildDevice(state.contactDevice)
-    device.sendEvent(name: "TotalCount", value: contactSensors.size())
-	device.sendEvent(name: "OpenThreshold", value: activeThreshold)
     runIn(1800,logsOff)
 }
 
-def contactHandler(evt) {
-    log.info "Checking status count..."
-    getCurrentCount()
-    def device = getChildDevice(state.contactDevice)
-	if (state.totalOpen >= activeThreshold)
-	{
-		log.info "Open threshold met; setting virtual device as open"
-		logDebug "Current threshold value is ${activeThreshold}"
-		device.sendEvent(name: "contact", value: "open", descriptionText: "The open devices are ${state.openList}")
-	} else {
-		log.info "All closed; setting virtual device as closed"
-		logDebug "Current threshold value is ${activeThreshold}"
-		device.sendEvent(name: "contact", value: "closed")
-	}
+def aggregateHandler(evt) {
+    log.info "Update received. Processing..."
+    getCurrentAggregateCount()
 }
 
 def createOrUpdateChildDevice() {
@@ -122,35 +105,23 @@ def logsOff(){
     app.updateSetting("debugOutput",[value:"false",type:"bool"])
 }
 
-def getCurrentCount() {
+def getCurrentAggregateCount() {
 	def device = getChildDevice(state.contactDevice)
-	def totalOpen = 0
-    def totalClosed = 0
-	def openList = []
-	contactSensors.each { it ->
-		if (it.currentValue("contact") == "open")
-		{
-            totalOpen++
-			if (it.label) {
-            openList.add(it.label)
-            }
-            else if (!it.label) {
-                openList.add(it.name)
-            }
-		}
-		else if (it.currentValue("contact") == "closed")
-		{
-			totalClosed++
-		}
+	def aggregateOpen = 0
+    def aggregateClosed = 0
+	def aggregateTotal = 0
+    contactSensors.each { it ->
+        totalOpen = it.currentValue("TotalOpen")
+		aggregateOpen = (aggregateOpen + totalOpen)
+        totalClosed = it.currentValue("TotalClosed")
+		aggregateClosed = (aggregateClosed + totalClosed)
+        totalCount = it.currentValue("TotalCount")
+		aggregateTotal = (aggregateTotal + totalCount)
     }
-    state.totalOpen = totalOpen
-	if (openList.size() == 0) {
-        openList.add("None")
-    }
-	state.openList = openList.sort()
-    logDebug "There are ${totalClosed} sensors closed"
-    logDebug "There are ${totalOpen} sensors open"
-    device.sendEvent(name: "TotalClosed", value: totalClosed)
-    device.sendEvent(name: "TotalOpen", value: totalOpen)
-	device.sendEvent(name: "OpenList", value: state.openList)
+    logDebug "There are ${aggregateClosed} sensors closed."
+    logDebug "There are ${aggregateOpen} sensors open."
+	logDebug "There are ${aggregateTotal} sensors in total."
+    device.sendEvent(name: "AggregateTotalClosed", value: aggregateClosed)
+    device.sendEvent(name: "AggregateTotalCount", value: aggregateTotal)
+	device.sendEvent(name: "AggregateTotalOpen", value: aggregateOpen)
 }
