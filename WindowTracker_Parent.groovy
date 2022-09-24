@@ -49,7 +49,7 @@ def mainPage() {
 			}
 			section("Child Apps") {
 				app(name: "windowTrackerApp+", appName: "Window Tracker Child", namespace: "rle.sg+", title: "Add a new Window Tracker Instance", multiple: true)
-				app(name: "overwatch", appName: "Window Summary", namespace: "rle.sg+", title: "Add a new Overwatch Instance", multiple: true)
+				app(name: "overwatch", appName: "Window Tracker Aggregate", namespace: "rle.sg+", title: "Add a new Aggregate Instance", multiple: true)
 			}
 			section("General") {
        			label title: "Enter a name for this parent app (optional)", required: false
