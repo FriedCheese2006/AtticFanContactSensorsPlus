@@ -19,7 +19,7 @@
       "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowTracker_Child.groovy",
       "required": true,
       "oauth": false,
-      "primary": true
+      "primary": false
     },
     {
       "name": "Window Tracker+ Overwatch",
@@ -27,7 +27,7 @@
       "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowsTracker_Overwatch.groovy",
       "required": true,
       "oauth": false,
-      "primary": true
+      "primary": false
     }
   ],
   "drivers": [
