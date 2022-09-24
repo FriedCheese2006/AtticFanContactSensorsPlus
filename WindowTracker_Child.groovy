@@ -21,7 +21,7 @@ definition(
     author: "Ryan Elliott",
     description: "Creates virtual devices to track groups of contact sensors.",
     category: "Convenience",
-	parent: "rle.sg+:Window Tracker+",
+	parent: "rle.sg+:Window Tracker",
 	iconUrl: "",
     iconX2Url: "")
 

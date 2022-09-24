@@ -22,7 +22,7 @@
       "primary": false
     },
     {
-      "name": "Window Tracker+ Overwatch",
+      "name": "Window Tracker+ Aggregate",
       "namespace": "rle.sg+",
       "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowsTracker_Overwatch.groovy",
       "required": true,

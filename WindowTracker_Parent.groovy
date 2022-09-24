@@ -1,6 +1,6 @@
 /**
  *
- * Window Tracker+
+ * Window Tracker
  *
  * Copyright 2022 Ryan Elliott
  * 
@@ -16,10 +16,10 @@
  */
  
 definition(
-    name: "Window Tracker+",
+    name: "Window Tracker",
     namespace: "rle.sg+",
     author: "Ryan Elliott",
-    description: "Allow for the tracking of contact sensors in groups with the option to aggre.",
+    description: "Allow for the tracking of contact sensors in groups with the option to aggregate.",
     category: "Convenience",
 	iconUrl: "",
     iconX2Url: "")

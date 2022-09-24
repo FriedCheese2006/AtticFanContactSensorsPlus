@@ -1,6 +1,6 @@
 /**
  *
- * Window Tracker Summary
+ * Window Tracker Aggregate
  *
  * Copyright 2022 Ryan Elliott
  * 
@@ -16,12 +16,12 @@
  */
  
 definition(
-    name: "Window Tracker Summary",
+    name: "Window Tracker+ Aggregate",
     namespace: "rle.sg+",
     author: "Ryan Elliott",
     description: "Creates virtual devices to track groups of contact sensors.",
     category: "Convenience",
-	parent: "rle.sg+:Window Tracker+",
+	parent: "rle.sg+:Window Tracker",
 	iconUrl: "",
     iconX2Url: "")
 
