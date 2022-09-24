@@ -1,6 +1,6 @@
 /**
  *
- * Attic Fan Contact Sensors Plus Device
+ * House Fan Window Tracker Device
  *
  * Copyright 2022 Ryan Elliott
  * 
@@ -17,18 +17,14 @@
 
 metadata {
 	definition(
-    name: "Attic Fan Contact Sensors Plus Device",
+    name: "Window Tracker Device",
     namespace: "rle.sg+",
     author: "Ryan Elliott") 
 		{
 		capability "ContactSensor"
 			
-		attribute "contact", "enum", ["closed", "open"]
-		attribute "TotalCount", "number"
-		attribute "TotalOpen", "number"
-		attribute "TotalClosed", "number"
-		attribute "OpenList", "string"
-		attribute "OpenThreshold", "number"
+		attribute "variable", "string"
+		attribute "variable", "number"
 	}
 }
 

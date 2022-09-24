@@ -1,6 +1,6 @@
 /**
  *
- * Attic Fan Sensor Groups+_Contact
+ * Window Tracker Child
  *
  * Copyright 2022 Ryan Elliott
  * 
@@ -16,11 +16,12 @@
  */
  
 definition(
-    name: "Attic Fan Sensor Groups+_Contact",
+    name: "Window Tracker Child",
     namespace: "rle.sg+",
     author: "Ryan Elliott",
-    description: "Creates a virtual device to track a group of contact sensors.",
+    description: "Creates virtual devices to track groups of contact sensors.",
     category: "Convenience",
+	parent: "rle.sg+:Window Tracker+",
 	iconUrl: "",
     iconX2Url: "")
 
@@ -32,9 +33,7 @@ preferences {
 def prefContactGroup() {
 	return dynamicPage(name: "prefContactGroup", title: "Create a Contact Group", nextPage: "prefSettings", uninstall:true, install: false) {
 		section {
-            label title: "Enter a name for this child app."+
-            "This will create a virtual contact sensor which reports the open/closed status based on the sensors you select."+
-            "Optionally, set a thing.", required:true
+            label title: "<b>***Enter a name for this child app.***</b><br>This will create a virtual contact sensor which reports the open/closed status based on the sensors you select.", required:true
 		}
 	}
 }
@@ -42,7 +41,7 @@ def prefContactGroup() {
 def prefSettings() {
     return dynamicPage(name: "prefSettings", title: "", install: true, uninstall: true) {
 		section {
-			paragraph "Please choose which sensors to include in this group. When all the sensors are closed, the virtual device is closed. If any sensor is open, the virtual device is open."
+			paragraph "Please choose which sensors to include in this group. The virtual device will report status based on the configured threshold."
 
 			input "contactSensors", "capability.contactSensor", title: "Window contact sensors to monitor", multiple:true, required:true
 
@@ -125,7 +124,6 @@ def doorHandler(evt) {
 	} else {
 		log.info "Door(s) open; checking windows..."
 		subscribe(contactSensors, "contact", contactHandler)
-		getCurrentCount()
         contactHandler()
 	}
 }
@@ -135,7 +133,7 @@ def createOrUpdateChildDevice() {
     if (!childDevice || state.contactDevice == null) {
         logDebug "Creating child device"
 		state.contactDevice = "contactgroup:" + app.getId()
-		addChildDevice("rle.sg+", "Sensor Groups+_Virtual Contact Sensor", "contactgroup:" + app.getId(), 1234, [name: app.label + "_device", isComponent: false])
+		addChildDevice("rle.sg+", "Window Tracker Device", "contactgroup:" + app.getId(), 1234, [name: app.label + "_device", isComponent: false])
     }
 	else if (childDevice && childDevice.name != (app.label + "_device"))
 		childDevice.name = app.label + "_device"
