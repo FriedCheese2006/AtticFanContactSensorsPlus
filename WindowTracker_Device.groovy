@@ -22,9 +22,14 @@ metadata {
     author: "Ryan Elliott") 
 		{
 		capability "ContactSensor"
+		capability "Actuator"
 			
-		attribute "variable", "string"
-		attribute "variable", "number"
+		attribute "contact", "enum", ["closed", "open"]
+		attribute "TotalCount", "number"
+		attribute "TotalOpen", "number"
+		attribute "TotalClosed", "number"
+		attribute "OpenList", "string"
+		attribute "OpenThreshold", "number"
 	}
 }
 
