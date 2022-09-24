@@ -1,6 +1,6 @@
 /**
  *
- * House Fan Window Tracker Device
+ * Window Tracker Device
  *
  * Copyright 2022 Ryan Elliott
  * 
