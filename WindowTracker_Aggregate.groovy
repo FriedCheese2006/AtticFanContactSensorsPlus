@@ -16,7 +16,7 @@
  */
  
 definition(
-    name: "Window Tracker+ Aggregate",
+    name: "Window Tracker Aggregate",
     namespace: "rle.sg+",
     author: "Ryan Elliott",
     description: "Creates virtual devices to track groups of contact sensors.",

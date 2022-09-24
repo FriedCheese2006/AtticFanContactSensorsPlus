@@ -1,12 +1,12 @@
 {
-  "packageName": "Window Tracker+",
+  "packageName": "Window Tracker",
   "author": "Ryan Elliott",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minimumHEVersion": "0.0.0",
   "dateReleased": "2022-09-22",
   "apps": [
     {
-      "name": "Window Tracker+",
+      "name": "Window Tracker",
       "namespace": "rle.sg+",
       "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowTracker_Parent.groovy",
       "required": true,
@@ -14,7 +14,7 @@
       "primary": true
     },
     {
-      "name": "Window Tracker+ Child",
+      "name": "Window Tracker Child",
       "namespace": "rle.sg+",
       "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowTracker_Child.groovy",
       "required": true,
@@ -22,9 +22,9 @@
       "primary": false
     },
     {
-      "name": "Window Tracker+ Aggregate",
+      "name": "Window Tracker Aggregate",
       "namespace": "rle.sg+",
-      "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowsTracker_Overwatch.groovy",
+      "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowTracker_Aggregate.groovy",
       "required": true,
       "oauth": false,
       "primary": false
@@ -32,7 +32,7 @@
   ],
   "drivers": [
     {
-      "name": "Window Tracker+ Device",
+      "name": "Window Tracker Device",
       "namespace": "rle.sg+",
       "location": "https://raw.githubusercontent.com/FriedCheese2006/WindowTrackerPlus/main/WindowTracker_Device.groovy",
       "required": true
