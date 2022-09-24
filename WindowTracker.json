@@ -2,7 +2,7 @@
   "packageName": "Window Tracker+",
   "author": "Ryan Elliott",
   "version": "0.1.0",
-  "minimumHEVersion": "0.0",
+  "minimumHEVersion": "0.0.1",
   "dateReleased": "2022-09-22",
   "apps": [
     {
