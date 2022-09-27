@@ -13,6 +13,7 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * v1.0		RLE		Creation
+ * v1.1		RLE		Added door listing
  */
 
 metadata {
@@ -27,7 +28,8 @@ metadata {
 		attribute "TotalCount", "number"
 		attribute "TotalOpen", "number"
 		attribute "TotalClosed", "number"
-		attribute "OpenList", "string"
+		attribute "OpenWindowList", "string"
+		attribute "ClosedDoorList", "string"
 		attribute "OpenThreshold", "number"
 		attribute "AggregateTotalCount", "number"
 		attribute "AggregateTotalOpen", "number"

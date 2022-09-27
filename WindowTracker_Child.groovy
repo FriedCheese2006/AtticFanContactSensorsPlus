@@ -13,6 +13,7 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * v1.0		RLE		Creation
+ * v1.1		RLE		Added door closed listing
  */
  
 definition(
@@ -109,9 +110,16 @@ def contactHandler(evt) {
 def doorHandler(evt) {
 	def device = getChildDevice(state.contactDevice)
     def closedCount = 0
+	def closedDoorList = []
 	doorSensors.each { it ->
 		if (it.currentValue("contact") == "closed") {
 			closedCount++
+			if (it.label) {
+            closedDoorList.add(it.label)
+            }
+            else if (!it.label) {
+                closedDoorList.add(it.name)
+            }
 		}
 	}
 	if (closedCount >= 1) {
@@ -121,6 +129,7 @@ def doorHandler(evt) {
     	device.sendEvent(name: "TotalOpen", value: "0")
 		device.sendEvent(name: "OpenList", value: "[None]")
         device.sendEvent(name: "contact", value: "closed")
+		device.sendEvent(name: "ClosedDoorList", value: closedDoorList)
 	} else {
 		log.info "Door(s) open; checking windows..."
 		subscribe(contactSensors, "contact", contactHandler)
@@ -154,16 +163,16 @@ def getCurrentCount() {
 	def device = getChildDevice(state.contactDevice)
 	def totalOpen = 0
     def totalClosed = 0
-	def openList = []
+	def openWindowList = []
 	contactSensors.each { it ->
 		if (it.currentValue("contact") == "open")
 		{
             totalOpen++
 			if (it.label) {
-            openList.add(it.label)
+            openWindowList.add(it.label)
             }
             else if (!it.label) {
-                openList.add(it.name)
+                openWindowList.add(it.name)
             }
 		}
 		else if (it.currentValue("contact") == "closed")
@@ -172,13 +181,13 @@ def getCurrentCount() {
 		}
     }
     state.totalOpen = totalOpen
-	if (openList.size() == 0) {
-        openList.add("None")
+	if (openWindowList.size() == 0) {
+        openWindowList.add("None")
     }
-	state.openList = openList.sort()
+	state.openWindowList = openWindowList.sort()
     logDebug "There are ${totalClosed} sensors closed"
     logDebug "There are ${totalOpen} sensors open"
     device.sendEvent(name: "TotalClosed", value: totalClosed)
     device.sendEvent(name: "TotalOpen", value: totalOpen)
-	device.sendEvent(name: "OpenList", value: state.openList)
+	device.sendEvent(name: "OpenWindowList", value: state.openWindowList)
 }
