@@ -124,16 +124,16 @@ def getCurrentAggregateCount() {
         def openWindows = new groovy.json.JsonSlurper().parseText(it.currentValue("OpenWindowList"))
 		aggregateOpenWindowsList.addAll(openWindows)
         def closedDoors = new groovy.json.JsonSlurper().parseText(it.currentValue("ClosedDoorList"))
-		aggregateDoorClosedList.addAll(closedDoors)
+		aggregateClosedDoorList.addAll(closedDoors)
     }
     logDebug "There are ${aggregateClosed} sensors closed."
     logDebug "There are ${aggregateOpen} sensors open."
 	logDebug "There are ${aggregateTotal} sensors in total."
 	logDebug "These windows are open: ${aggregateOpenWindowsList}"
-    logDebug "These doors are closed: ${aggregateDoorClosedList}"
+    logDebug "These doors are closed: ${aggregateClosedDoorList}"
     device.sendEvent(name: "AggregateTotalClosed", value: aggregateClosed)
     device.sendEvent(name: "AggregateTotalCount", value: aggregateTotal)
 	device.sendEvent(name: "AggregateTotalOpen", value: aggregateOpen)
 	device.sendEvent(name: "AggregateOpenWindowList", value: aggregateOpenWindowsList)
-    device.sendEvent(name: "AggregateClosedDoorList", value: aggregateDoorClosedList)
+    device.sendEvent(name: "AggregateClosedDoorList", value: aggregateClosedDoorList)
 }
