@@ -28,12 +28,14 @@ metadata {
 		attribute "TotalCount", "number"
 		attribute "TotalOpen", "number"
 		attribute "TotalClosed", "number"
-		attribute "OpenWindowList", "string"
-		attribute "ClosedDoorList", "string"
+		attribute "OpenWindowList", "json"
+		attribute "ClosedDoorList", "json"
 		attribute "OpenThreshold", "number"
 		attribute "AggregateTotalCount", "number"
 		attribute "AggregateTotalOpen", "number"
 		attribute "AggregateTotalClosed", "number"
+        attribute "AggregateOpenWindowList", "json"
+        attribute "AggregateDoorClosedList", "json"
 	}
 }
 

@@ -14,6 +14,8 @@
  *
  * v1.0		RLE		Creation
  */
+
+import groovy.json.*
  
 definition(
     name: "Window Tracker Aggregate",
@@ -110,6 +112,8 @@ def getCurrentAggregateCount() {
 	def aggregateOpen = 0
     def aggregateClosed = 0
 	def aggregateTotal = 0
+	def aggregateOpenWindowsList = []
+	def aggregateClosedDoorList = []
     contactSensors.each { it ->
         totalOpen = it.currentValue("TotalOpen")
 		aggregateOpen = (aggregateOpen + totalOpen)
@@ -117,11 +121,19 @@ def getCurrentAggregateCount() {
 		aggregateClosed = (aggregateClosed + totalClosed)
         totalCount = it.currentValue("TotalCount")
 		aggregateTotal = (aggregateTotal + totalCount)
+        def openWindows = new groovy.json.JsonSlurper().parseText(it.currentValue("OpenWindowList"))
+		aggregateOpenWindowsList.addAll(openWindows)
+        def closedDoors = new groovy.json.JsonSlurper().parseText(it.currentValue("ClosedDoorList"))
+		aggregateDoorClosedList.addAll(closedDoors)
     }
     logDebug "There are ${aggregateClosed} sensors closed."
     logDebug "There are ${aggregateOpen} sensors open."
 	logDebug "There are ${aggregateTotal} sensors in total."
+	logDebug "These windows are open: ${aggregateOpenWindowsList}"
+    logDebug "These doors are closed: ${aggregateDoorClosedList}"
     device.sendEvent(name: "AggregateTotalClosed", value: aggregateClosed)
     device.sendEvent(name: "AggregateTotalCount", value: aggregateTotal)
 	device.sendEvent(name: "AggregateTotalOpen", value: aggregateOpen)
+	device.sendEvent(name: "AggregateOpenWindowList", value: aggregateOpenWindowsList)
+    device.sendEvent(name: "AggregateClosedDoorList", value: aggregateDoorClosedList)
 }

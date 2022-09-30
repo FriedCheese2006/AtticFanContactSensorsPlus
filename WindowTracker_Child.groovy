@@ -111,6 +111,7 @@ def doorHandler(evt) {
 	def device = getChildDevice(state.contactDevice)
     def closedCount = 0
 	def closedDoorList = []
+    def openWindowList = []
 	doorSensors.each { it ->
 		if (it.currentValue("contact") == "closed") {
 			closedCount++
@@ -127,11 +128,18 @@ def doorHandler(evt) {
 		unsubscribe(contactSensors, "contact", contactHandler)
 		device.sendEvent(name: "TotalClosed", value: contactSensors.size())
     	device.sendEvent(name: "TotalOpen", value: "0")
-		device.sendEvent(name: "OpenList", value: "[None]")
+        openWindowList.add("None")
+        openWindowList = groovy.json.JsonOutput.toJson(openWindowList)
+		device.sendEvent(name: "OpenWindowList", value: openWindowList)
         device.sendEvent(name: "contact", value: "closed")
+        closedDoorList = closedDoorList.sort()
+        closedDoorList = groovy.json.JsonOutput.toJson(closedDoorList)
 		device.sendEvent(name: "ClosedDoorList", value: closedDoorList)
 	} else {
 		log.info "Door(s) open; checking windows..."
+        closedDoorList.add("None")
+        closedDoorList = groovy.json.JsonOutput.toJson(closedDoorList)
+        device.sendEvent(name: "ClosedDoorList", value: closedDoorList)
 		subscribe(contactSensors, "contact", contactHandler)
         contactHandler()
 	}
@@ -184,10 +192,11 @@ def getCurrentCount() {
 	if (openWindowList.size() == 0) {
         openWindowList.add("None")
     }
-	state.openWindowList = openWindowList.sort()
+	openWindowList = openWindowList.sort()
+    openWindowList = groovy.json.JsonOutput.toJson(openWindowList)
     logDebug "There are ${totalClosed} sensors closed"
     logDebug "There are ${totalOpen} sensors open"
     device.sendEvent(name: "TotalClosed", value: totalClosed)
     device.sendEvent(name: "TotalOpen", value: totalOpen)
-	device.sendEvent(name: "OpenWindowList", value: state.openWindowList)
+	device.sendEvent(name: "OpenWindowList", value: openWindowList)
 }
