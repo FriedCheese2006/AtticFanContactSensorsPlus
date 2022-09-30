@@ -79,13 +79,16 @@ def updated() {
 
 def initialize() {
 	subscribe(contactSensors, "contact", contactHandler)
-	subscribe(doorSensors, "contact", doorHandler)
 	createOrUpdateChildDevice()
-    if (doorSensors) {
+	def device = getChildDevice(state.contactDevice)
+    if (doorSensors) {        
+	    subscribe(doorSensors, "contact", doorHandler)
         doorHandler()
     } else {
-        contactHandler()}
-    def device = getChildDevice(state.contactDevice)
+        closedDoorList = groovy.json.JsonOutput.toJson("None")
+        logDebug "No doors sensors selected"
+		device.sendEvent(name: "ClosedDoorList", value: closedDoorList)
+        contactHandler()}    
     device.sendEvent(name: "TotalCount", value: contactSensors.size())
 	device.sendEvent(name: "OpenThreshold", value: activeThreshold)
     runIn(1800,logsOff)
