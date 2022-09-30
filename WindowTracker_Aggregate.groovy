@@ -13,6 +13,7 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * v1.0		RLE		Creation
+ * v1.1		RLE		Added aggregation of open windows and closed door lists from child apps.
  */
 
 import groovy.json.*
@@ -112,28 +113,47 @@ def getCurrentAggregateCount() {
 	def aggregateOpen = 0
     def aggregateClosed = 0
 	def aggregateTotal = 0
-	def aggregateOpenWindowsList = []
-	def aggregateClosedDoorList = []
-    contactSensors.each { it ->
+	contactSensors.each { it ->
         totalOpen = it.currentValue("TotalOpen")
 		aggregateOpen = (aggregateOpen + totalOpen)
         totalClosed = it.currentValue("TotalClosed")
 		aggregateClosed = (aggregateClosed + totalClosed)
         totalCount = it.currentValue("TotalCount")
 		aggregateTotal = (aggregateTotal + totalCount)
-        def openWindows = new groovy.json.JsonSlurper().parseText(it.currentValue("OpenWindowList"))
-		aggregateOpenWindowsList.addAll(openWindows)
-        def closedDoors = new groovy.json.JsonSlurper().parseText(it.currentValue("ClosedDoorList"))
-		aggregateClosedDoorList.addAll(closedDoors)
     }
+	getLists()
     logDebug "There are ${aggregateClosed} sensors closed."
     logDebug "There are ${aggregateOpen} sensors open."
 	logDebug "There are ${aggregateTotal} sensors in total."
-	logDebug "These windows are open: ${aggregateOpenWindowsList}"
-    logDebug "These doors are closed: ${aggregateClosedDoorList}"
     device.sendEvent(name: "AggregateTotalClosed", value: aggregateClosed)
     device.sendEvent(name: "AggregateTotalCount", value: aggregateTotal)
 	device.sendEvent(name: "AggregateTotalOpen", value: aggregateOpen)
+}
+
+def getLists () {
+	def device = getChildDevice(state.contactDevice)
+	def aggregateOpenWindowsList = []
+	def aggregateClosedDoorList = []
+	contactSensors.each { it ->
+        def openWindows = new groovy.json.JsonSlurper().parseText(it.currentValue("OpenWindowList"))
+        if (!openWindows.contains("None")) {
+			aggregateOpenWindowsList.addAll(openWindows)
+		}
+        def closedDoors = new groovy.json.JsonSlurper().parseText(it.currentValue("ClosedDoorList"))
+        if (!closedDoors.contains("None")) {
+			aggregateClosedDoorList.addAll(closedDoors)
+		}
+	}
+    if (!aggregateOpenWindowsList) {
+        aggregateOpenWindowsList = "None"
+    }
+    aggregateOpenWindowsList = groovy.json.JsonOutput.toJson(aggregateOpenWindowsList)
+    if (!aggregateClosedDoorList) {
+        aggregateClosedDoorList = "None"
+    }
+    aggregateClosedDoorList = groovy.json.JsonOutput.toJson(aggregateClosedDoorList)
+	logDebug "These windows are open: ${aggregateOpenWindowsList}"
+    logDebug "These doors are closed: ${aggregateClosedDoorList}"
 	device.sendEvent(name: "AggregateOpenWindowList", value: aggregateOpenWindowsList)
     device.sendEvent(name: "AggregateClosedDoorList", value: aggregateClosedDoorList)
 }

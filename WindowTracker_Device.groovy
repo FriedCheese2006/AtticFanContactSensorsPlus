@@ -14,6 +14,7 @@
  *
  * v1.0		RLE		Creation
  * v1.1		RLE		Added door listing
+ * v1.2		RLE		Added aggregate attributes
  */
 
 metadata {
@@ -35,7 +36,7 @@ metadata {
 		attribute "AggregateTotalOpen", "number"
 		attribute "AggregateTotalClosed", "number"
         attribute "AggregateOpenWindowList", "json"
-        attribute "AggregateDoorClosedList", "json"
+        attribute "AggregateClosedDoorList", "json"
 	}
 }
 
